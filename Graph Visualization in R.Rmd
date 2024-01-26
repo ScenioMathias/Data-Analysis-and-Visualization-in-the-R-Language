@@ -1,0 +1,174 @@
+Hello, this material is a didactic study resource in the R language, where I will present some practical knowledge of data visualization using graphs.
+
+
+Histogram Graph
+```{r}
+
+trees
+hist(trees$Girth)
+hist(trees$Girth, main='Arvores', xlab= 'Altura', ylab= 'Frequencia', col= 'blue')
+
+```
+
+Density Plot
+```{r}
+densidade = density(trees$Girth)
+plot(densidade)
+```
+
+Density Plot over Histogram
+```{r}
+hist(trees$Girth, main = NULL, xlab = NULL, ylab = NULL)
+par(new=TRUE)
+plot(densidade)
+```
+
+Scatter Plot
+```{r}
+plot(trees$Girth,trees$Height)
+plot(trees$Girth,trees$Height, main = 'Arvores', xlab = 'Volume', ylab = 'Circunferencia', col= 'blue', pch=10)
+```
+```{r}
+plot(trees$Girth,trees$Height, main = 'Arvores', xlab = 'Volume', ylab = 'Circunferencia', col= 'blue', pch=10, type = 'b')
+```
+
+Correct overlapping points with the same value through jittering
+```{r}
+plot(jitter(trees$Girth), trees$Height, main = 'Arvores', xlab = 'Volume', ylab = 'Circunferencia', col= 'blue',)
+```
+
+Apply legend with categorical dimension
+```{r}
+plot(CO2$conc, CO2$uptake, pch=20, col=CO2$Treatment)
+legend("bottomright",legend=c("nonchilled","chilled"),cex=1,fill=c("black","red"))
+```
+
+New data
+```{r}
+plot(trees)
+```
+
+Screen Splitting
+```{r}
+split.screen(figs = c(2,2))
+screen(1)
+plot(trees$Girth,trees$Height)
+screen(2)
+plot(trees$Girth,trees$Volume)
+screen(3)
+plot(trees$Height,trees$Volume)
+screen(4)
+hist(trees$Volume)
+close.screen(all=TRUE)
+```
+
+Boxplot
+```{r}
+boxplot(trees$Volume,main='Arvore',xlab='Volume')
+boxplot(trees$Volume,main='Arvore',xlab='Volume', col='blue', horizontal=TRUE)
+boxplot(trees$Volume,main='Arvore',xlab='Volume', col='blue', horizontal=TRUE, outline = F)
+```
+
+Additional Options for the Boxplot
+```{r}
+boxplot(trees$Volume,main='Arvore',xlab='Volume', col='blue', notch = TRUE)
+boxplot.stats(trees$Volume)
+boxplot(trees)
+```
+
+Aggregate Information
+```{r}
+InsectSprays
+agregadospray = aggregate(.~spray,data=InsectSprays,sum)
+agregadospray
+```
+Bar Chart
+```{r}
+barplot(spray$count, col=gray.colors(6), xlab='Spray',ylab ="Total",names.arg =spray$spray)
+box()
+```
+
+Pie Chart
+```{r}
+pie(spray$count, labels = spray$spray, main='Spray', col=c(1:6))
+
+```
+
+Pie Chart with Legend
+```{r}
+pie(spray$count, labels = NULL, main='Spray', col=c(1:6))
+legend('bottomright',legend=spray$spray, cex=1, fill=c(1:6))
+```
+
+Tables in LaTeX Format
+```{r}
+#install.packages("stargazer")
+library(stargazer)
+stargazer(iris)
+```
+
+Tables in HTML Format
+```{r}
+stargazer(iris, type='html')
+```
+Tables in Text Format
+```{r}
+stargazer(iris, type='text')
+```
+Save to Disk
+```{r}
+stargazer(women, out='woman.text', summary = FALSE)
+```
+Lattice Package
+```{r}
+library(lattice)
+```
+
+Boxplot Graph using Lattice
+```{r}
+bwplot(trees$Volume)
+bwplot(trees$Volume, main='Arvores', xlab = 'volume')
+```
+
+Histogram Graph using Lattice
+```{r}
+histogram(trees$Volume, main='Arvore', xlab = 'Volume', aspect= 1, type='percent', nint= 5)
+
+```
+```{r}
+chickwts
+aggregate(chickwts$weight, by= list(chickwts$feed), FUN= sum)
+histogram(~weight | feed, data=chickwts)
+```
+
+Conditional Scatterplot 
+```{r}
+CO2
+xyplot(CO2$conc ~CO2$uptake | CO2$Type)
+xyplot(CO2$conc ~CO2$uptake | CO2$Treatment)
+```
+
+Dotplot Graph
+```{r}
+esoph
+dotplot(esoph$alcgp ~esoph$ncontrols | esoph$tobgp, data = esoph )
+```
+
+Conditional Density
+```{r}
+densityplot(~CO2$conc | CO2$Treatment, plot.points=FALSE)
+```
+
+3D Plots
+```{r}
+OrchardSprays
+cloud(decrease ~rowpos * colpos, data=OrchardSprays)
+cloud(decrease ~rowpos * colpos, ,groups=treatment, data=OrchardSprays)
+```
+
+Level Plot
+```{r}
+trees
+levelplot(Girth ~Height * Volume, data=trees)
+```
+
