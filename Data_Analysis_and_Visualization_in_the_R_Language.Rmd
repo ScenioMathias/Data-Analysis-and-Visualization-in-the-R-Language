@@ -1,0 +1,101 @@
+This material covers exploratory analysis and understanding of data through data visualization using the R language.
+
+In this material, we will use the dataset from the file dados.csv.
+
+```{r}
+# Reads a CSV file selected by the user, considering the first line as header and using ';' as separator
+dataset = read.csv(choose.files(), header= TRUE, sep= ';')
+# Stores the CSV file data in the 'dataset' variable
+dataset
+```
+After importing the file using the 'Choose.files()' method, we will analyze the distribution of the dataset.
+
+```{r}
+# Displays a statistical summary of the 'dataset' dataset, including information such as mean, median, minimum, maximum, and quartiles for each variable.
+summary(dataset)
+```
+
+Through the command 'summary(dataset)', we can have an overview of the dataset. For example, we can identify the existing columns and the details of the data contained in each column, such as the minimum value, maximum value, and median for numerical columns.
+
+We can visualize through the boxplot and histogram how the data is distributed in each column and thus identify outliers, if any.
+
+We can plot the boxplot and histogram for individual analysis of the numerical data columns:
+```{r}
+# Installs the RColorBrewer package if not already installed (execute only once)
+#install.packages("RColorBrewer")
+
+# Loads the RColorBrewer package to use the available color palettes
+library(RColorBrewer)
+
+# Generates a boxplot to visualize the distribution of commitment values in the dataset
+boxplot(dataset$VALOREMPENHO, main="Valores de Empenho", col = brewer.pal(n = 3, name = "Paired"))
+
+# Generates a boxplot to visualize the distribution of GDP values in the dataset
+boxplot(dataset$PIB ,main="Valores de PIB", col = brewer.pal(n = 3, name = "Pastel1"))
+
+# Generates a histogram to visualize the distribution of commitment values in the dataset
+hist(dataset$VALOREMPENHO,main="Valores de Empenho", col = brewer.pal(n = 3, name = "Paired"))
+
+# Generates a histogram to visualize the distribution of GDP values in the dataset
+hist(dataset$PIB,main="Valores de PIB", col = brewer.pal(n = 3, name = "Pastel1"))
+```
+Now that we have analyzed the individual plots, let's identify the top 10 occurrences of commitments, filtering and plotting a bar chart.
+```{r}
+
+# Loads the dplyr package for data manipulation
+library(dplyr)
+
+# Selects the top 10 entries in descending order of commitment
+top_10 = head(arrange(dataset, desc(dataset$VALOREMPENHO)),10)
+
+# Displays the top 10 entries
+top_10
+
+# Displays the city names of the top 10 entries
+top_10$MUNICIPIO
+
+# Generates a bar plot to visualize the top 10 commitments
+barplot(top_10$VALOREMPENHO, main = "10 Maiores Empenhos", col=brewer.pal(n = 10, name = "RdBu"))
+
+# Adds a legend to the plot to identify the corresponding cities
+legend('topright', legend=top_10$MUNICIPIO, col = brewer.pal(n = 10, name = "RdBu"),  lty=1, cex=0.75, ncol = 2,lwd=6)
+
+# Adds a frame around the plot
+box()
+```
+Now that we have comprehended through the analysis the top 10 largest cities, ordered by commitment, let's analyze the top 10 by GDP.
+```{r}
+# Selects the top 10 cities in descending order of GDP
+top_10_pib = head(arrange(dataset, desc(dataset$PIB)),10)
+
+
+# Generates a bar plot with the top 10 GDPs
+barplot(top_10_pib$PIB, main = "10 Maiores PIBS", col=brewer.pal(n = 10, name = "Spectral"))
+
+# Adds a legend to the plot to identify the corresponding cities
+legend('topright', legend=top_10_pib$MUNICIPIO, col = brewer.pal(n = 10, name = "Spectral"),  lty=1, cex=0.75, ncol = 2,lwd=6)
+
+# Adds a frame around the plot
+box()
+```
+Now that we have comprehended through the analysis the top 10 largest cities, ordered by GDP, let's relate both pieces of information by determining which cities had the highest expenses in relation to their GDP.
+
+```{r}
+# Calculates the ratio between expenses and Gross Domestic Product (GDP) for each city
+
+dataset$proporcao = dataset$VALOREMPENHO / dataset$PIB
+
+# Selects the top 10 ratios
+top_10_proporcao = head(arrange(dataset, desc(dataset$proporcao)),10)
+
+# Generates a bar plot with the top 10 ratios
+barplot(top_10_proporcao$proporcao, main = "Maiores Gastos em Proporção ao PIB", col=brewer.pal(n = 10, name = "Set2"))
+
+# Adds a legend to the plot to identify the corresponding cities
+legend('topright', legend=top_10_proporcao$MUNICIPIO, col = brewer.pal(n = 10, name = "Set2"),  lty=1, cex=0.75, ncol = 2,lwd=6)
+
+# Adds a frame around the plot
+box()
+```
+This material was a simple data analysis through visualization of graphs, using a dataset where we could relate information and gain some insights from it. 
+
